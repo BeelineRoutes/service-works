@@ -20,7 +20,7 @@ import (
  //----- STRUCTS ---------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-type employee struct {
+type Employee struct {
     EmployeeID int
     FirstName, LastName, Address, Zip, CityName, State, Phone, Email, UserId, Color string 
     IsTechnician, IsActive bool 
@@ -30,14 +30,14 @@ type employee struct {
  //----- FUNCTIONS -------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-func (this *ServiceWorks) CrewList (ctx context.Context, token string) ([]employee, error) {
+func (this *ServiceWorks) CrewList (ctx context.Context, token string) ([]Employee, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
     var resp struct {
         ApiStatus apiStatus
         Data struct {
-            EmployeeList []employee
+            EmployeeList []Employee
         }
     }
     
