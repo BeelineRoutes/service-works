@@ -23,30 +23,33 @@ import (
  //----- STRUCTS ---------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-type timeRange struct {
+type TimeRange struct {
     Id, Text string
 }
 
-type job struct {
+type Assignment struct {
+    TripAssignmentId, TripNo, Duration, TimeRangeId int 
+    AssignDateTime, TimeRange string 
+
+    AssignmentDetails []struct {
+        TripDetailsId, EmployeeId int
+        EmployeeName string 
+    }
+
+    TripList []struct {
+        TripDetailsId, EmployeeId int
+        CompletionTime time.Time 
+    }
+}
+
+type Job struct {
     TicketId int 
     IssueDescription, TicketStatus string 
     IsActive bool 
 
     Customer customer
 
-    Assignments []struct {
-        TripAssignmentId, TripNo, Duration, TimeRangeId int 
-        AssignDateTime, TimeRange string 
-
-        AssignmentDetails []struct {
-            TripDetailsId, EmployeeId int
-        }
-
-        TripList []struct {
-            TripDetailsId, EmployeeId int
-            CompletionTime time.Time 
-        }
-    }
+    Assignments []Assignment
 }
 
 type jobTech struct {
@@ -58,13 +61,13 @@ type jobTech struct {
  //----- FUNCTIONS -------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-func (this *ServiceWorks) JobsListTimeRanges (ctx context.Context, token string) ([]timeRange, error) {
+func (this *ServiceWorks) JobsListTimeRanges (ctx context.Context, token string) ([]TimeRange, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
     var resp struct {
         ApiStatus apiStatus
-        Data []timeRange 
+        Data []TimeRange 
     }
     
     errObj, err := this.send (ctx, http.MethodGet, "Job/GetTimeRange", header, nil, &resp)
@@ -78,7 +81,7 @@ func (this *ServiceWorks) JobsListTimeRanges (ctx context.Context, token string)
 
 // creates a new job
 func (this *ServiceWorks) JobCreate (ctx context.Context, token, issueDesc string, customerId, duration, timeRangeId int, target time.Time, 
-                                    employeeIds []int) (*job, error) {
+                                    employeeIds []int) (*Job, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
@@ -97,7 +100,7 @@ func (this *ServiceWorks) JobCreate (ctx context.Context, token, issueDesc strin
 
     var resp struct {
         ApiStatus apiStatus
-        Jobs []job
+        Jobs []Job
     }
     
     errObj, err := this.send (ctx, http.MethodPost, "Job/CreateNewJob", header, &req, &resp)
@@ -166,14 +169,14 @@ func (this *ServiceWorks) JobUpdate (ctx context.Context, token string, ticketId
 }
 
 
-func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, finish time.Time) ([]job, error) {
+func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, finish time.Time) ([]Job, error) {
     params := url.Values{}
     params.Set("fromdate", start.Format("01/02/2006"))
     params.Set("todate", finish.Format("01/02/2006"))
 
     var resp struct {
         ApiStatus apiStatus
-        Jobs []job
+        Jobs []Job
     }
     
     errObj, err := this.send (ctx, http.MethodGet, fmt.Sprintf("Job/GetJob?%s", params.Encode()), this.defaultHeader(token), nil, &resp)
