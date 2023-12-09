@@ -30,14 +30,14 @@ type Employee struct {
  //----- FUNCTIONS -------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-func (this *ServiceWorks) CrewList (ctx context.Context, token string) ([]Employee, error) {
+func (this *ServiceWorks) CrewList (ctx context.Context, token string) ([]*Employee, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
     var resp struct {
         ApiStatus apiStatus
         Data struct {
-            EmployeeList []Employee
+            EmployeeList []*Employee
         }
     }
     

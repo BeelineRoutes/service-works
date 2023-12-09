@@ -169,14 +169,14 @@ func (this *ServiceWorks) JobUpdate (ctx context.Context, token string, ticketId
 }
 
 
-func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, finish time.Time) ([]Job, error) {
+func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, finish time.Time) ([]*Job, error) {
     params := url.Values{}
     params.Set("fromdate", start.Format("01/02/2006"))
     params.Set("todate", finish.Format("01/02/2006"))
 
     var resp struct {
         ApiStatus apiStatus
-        Jobs []Job
+        Jobs []*Job
     }
     
     errObj, err := this.send (ctx, http.MethodGet, fmt.Sprintf("Job/GetJob?%s", params.Encode()), this.defaultHeader(token), nil, &resp)

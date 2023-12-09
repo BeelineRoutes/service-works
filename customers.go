@@ -38,7 +38,7 @@ type Customer struct {
 //-----------------------------------------------------------------------------------------------------------------------//
 
 
-func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search string) ([]Customer, error) {
+func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search string) ([]*Customer, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
@@ -48,7 +48,7 @@ func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search st
     var resp struct {
         ApiStatus apiStatus
         Data struct {
-            Customers []Customer
+            Customers []*Customer
         }
     }
     
