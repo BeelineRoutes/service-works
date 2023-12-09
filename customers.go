@@ -25,7 +25,7 @@ type Address struct {
     NotifyEmail, NotifyPrimaryPhone bool 
 }
 
-type customer struct {
+type Customer struct {
     FirstName, LastName, CompanyName, Email, PrimaryPhone string 
     CustomerId int 
     IsActive bool 
@@ -38,7 +38,7 @@ type customer struct {
 //-----------------------------------------------------------------------------------------------------------------------//
 
 
-func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search string) ([]customer, error) {
+func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search string) ([]Customer, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
@@ -48,7 +48,7 @@ func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search st
     var resp struct {
         ApiStatus apiStatus
         Data struct {
-            Customers []customer
+            Customers []Customer
         }
     }
     
@@ -71,7 +71,7 @@ func (this *ServiceWorks) SearchCustomers (ctx context.Context, token, search st
 }
 
 // creates a new customer with the required info
-func (this *ServiceWorks) CreateCustomer (ctx context.Context, token, firstName, lastName, email, phone, addr, addr2, zip, city, state string) (*customer, error) {
+func (this *ServiceWorks) CreateCustomer (ctx context.Context, token, firstName, lastName, email, phone, addr, addr2, zip, city, state string) (*Customer, error) {
     header := make(map[string]string)
     header["Token"] = token 
 
@@ -107,7 +107,7 @@ func (this *ServiceWorks) CreateCustomer (ctx context.Context, token, firstName,
     var resp struct {
         ApiStatus apiStatus
         Data struct {
-            Customers []customer
+            Customers []Customer
         }
     }
     

@@ -47,7 +47,7 @@ type Job struct {
     IssueDescription, TicketStatus string 
     IsActive bool 
 
-    Customer customer
+    Customer Customer
 
     Assignments []Assignment
 }
