@@ -38,7 +38,7 @@ type Assignment struct {
 
     TripList []struct {
         TripDetailsId, EmployeeId int
-        CompletionTime time.Time 
+        CompletionTime string 
     }
 }
 
