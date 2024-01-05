@@ -29,7 +29,7 @@ type TimeRange struct {
 
 type Assignment struct {
     TripAssignmentId, TripNo, Duration, TimeRangeId int 
-    AssignDateTime, TimeRange string 
+    AssignDateTime, TimeRange, AssignTime string 
 
     AssignmentDetails []struct {
         TripDetailsId, EmployeeId int
@@ -43,14 +43,25 @@ type Assignment struct {
 }
 
 type Job struct {
-    TicketId int 
-    IssueDescription, TicketStatus string 
-    IsActive bool 
+    TicketId, TicketStatusId, Duration int 
+    IssueDescription, TicketStatus string
 
+    TripAssignmentId, TripNo, TimeRangeId int 
+    AssignDateTime, AssignTime, Team, TeamIds string 
+
+    CustomerId int 
+    CustomerName, CustomerAddress, ContactPhone string 
+}
+
+type jobCreate struct {
+    TicketId, TicketStatusId int 
+    IssueDescription, TicketStatus string 
+    
     Customer Customer
 
     Assignments []Assignment
 }
+
 
 type jobTech struct {
     EmployeeId int 
@@ -100,7 +111,7 @@ func (this *ServiceWorks) JobCreate (ctx context.Context, token, issueDesc strin
 
     var resp struct {
         ApiStatus apiStatus
-        Jobs []Job
+        Jobs []jobCreate
     }
     
     errObj, err := this.send (ctx, http.MethodPost, "Job/CreateNewJob", header, &req, &resp)
@@ -120,9 +131,34 @@ func (this *ServiceWorks) JobCreate (ctx context.Context, token, issueDesc strin
     if len(j.Assignments) == 0 { return nil, wrapErr(errors.Errorf("Didn't get any job assignments back"), req, resp) }
     a := j.Assignments[0]
 
+    ret := &Job {
+        TicketId: j.TicketId,
+        TicketStatusId: j.TicketStatusId,
+        IssueDescription: j.IssueDescription,
+        TicketStatus: j.TicketStatus,
+
+        CustomerId: j.Customer.CustomerId,
+        CustomerName: fmt.Sprintf("%s %s", j.Customer.FirstName, j.Customer.LastName),
+        ContactPhone: j.Customer.PrimaryPhone,
+        
+        Duration: a.Duration,
+        TripAssignmentId: a.TripAssignmentId,
+        TripNo: a.TripNo,
+        TimeRangeId: a.TimeRangeId,
+        AssignDateTime: a.AssignDateTime,
+        AssignTime: a.AssignTime,
+    }
+
+    ret.TeamIds = fmt.Sprintf("%d", employeeIds[0]) // just use the first
+
+    if len(j.Customer.Addresses) > 0 {
+        ret.CustomerAddress = fmt.Sprintf ("%s %s %s, %s %s", j.Customer.Addresses[0].AddressLine1, j.Customer.Addresses[0].AddressLine2, 
+                            j.Customer.Addresses[0].City, j.Customer.Addresses[0].State, j.Customer.Addresses[0].Zip)
+    }
+
     // now we create the trip schedule and assign it to these employees
     err = this.JobUpdate (ctx, token, j.TicketId, a.TripAssignmentId, duration, timeRangeId, a.TripNo, target, employeeIds)
-    return &j, err // and return
+    return ret, err // and return
 }
 
 // updates the arrival time or assigned crew or both for an existing job
@@ -173,13 +209,15 @@ func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, fi
     params := url.Values{}
     params.Set("fromdate", start.Format("01/02/2006"))
     params.Set("todate", finish.Format("01/02/2006"))
+    params.Set("roleId", "0")
+    params.Set("isDateTrue", "true")
 
     var resp struct {
         ApiStatus apiStatus
         Jobs []*Job
     }
     
-    errObj, err := this.send (ctx, http.MethodGet, fmt.Sprintf("Job/GetJob?%s", params.Encode()), this.defaultHeader(token), nil, &resp)
+    errObj, err := this.send (ctx, http.MethodGet, fmt.Sprintf("Job/GetApiJobForSearch?%s", params.Encode()), this.defaultHeader(token), nil, &resp)
     if err != nil { return nil, errors.WithStack(err) } // bail
     if errObj != nil { return nil, errObj.Err() } // something else bad
 

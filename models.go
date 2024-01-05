@@ -68,6 +68,10 @@ func (this *apiStatus) Error () error {
 		return errors.WithStack(ErrInvalidCode)
 	}
 
+	if this.Status == 2 && strings.Contains(this.Message, "invalid token") {
+		return errors.WithStack(ErrInvalidCode)
+	}
+
 	// we don't know what happened, create a generic error message
 	return errors.Errorf ("Bad response. Got status %d :: message '%s' :: %s", this.Status, this.Message, string(jstr))
 }
