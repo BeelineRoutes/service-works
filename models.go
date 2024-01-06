@@ -18,16 +18,11 @@ import (
  //----- CONSTS ----------------------------------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------------------------------------------//
 
-type WorkStatus string 
+type JobStatus int 
 
 const (
-	WorkStatus_needsScheduling 		WorkStatus = "needs scheduling"
-	WorkStatus_scheduled	 		WorkStatus = "scheduled"
-	WorkStatus_inProgress	 		WorkStatus = "in progress"
-	WorkStatus_completeUnrated 		WorkStatus = "complete unrated"
-	WorkStatus_completeRated 		WorkStatus = "complete rated"
-	WorkStatus_userCanceled 		WorkStatus = "user canceled"
-	WorkStatus_proCanceled 			WorkStatus = "pro canceled"
+	JobStatus_scheduled		JobStatus = 2
+	JobStatus_unscheduled 	JobStatus = 7
 	
 )
 
