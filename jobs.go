@@ -216,7 +216,7 @@ func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, fi
 
     var resp struct {
         ApiStatus apiStatus
-        Jobs []*Job
+        Data []*Job
     }
     
     errObj, err := this.send (ctx, http.MethodGet, fmt.Sprintf("Job/GetApiJobForSearch?%s", params.Encode()), this.defaultHeader(token), nil, &resp)
@@ -225,6 +225,6 @@ func (this *ServiceWorks) ListJobs (ctx context.Context, token string, start, fi
 
     // see if the response was what was expected
     err = wrapErr(resp.ApiStatus.Error(), nil, resp)
-    return resp.Jobs, err // and return
+    return resp.Data, err // and return
 }
 
