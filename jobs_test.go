@@ -45,7 +45,7 @@ func TestSecondJobs2 (t *testing.T) {
 
 	assert.Equal (t, true, len(jobs) > 0)
 	assert.Equal (t, true, jobs[0].TicketId > 0)
-	assert.Equal (t, true, len(jobs[0].Customer.Addresses[0].AddressLine1) > 0)
-	assert.Equal (t, true, jobs[0].Assignments[0].TripAssignmentId > 0)
+	assert.Equal (t, true, len(jobs[0].CustomerAddress) > 0)
+	assert.Equal (t, true, jobs[0].TripAssignmentId > 0)
 	
 }

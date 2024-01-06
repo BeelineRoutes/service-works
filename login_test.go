@@ -17,7 +17,7 @@ func TestFirstLogin1 (t *testing.T) {
 	ctx, cancel := context.WithTimeout (context.Background(), time.Minute) // this should take < 1 minute
 	defer cancel()
 
-	// get our list of jobs, only unscheduled ones
+	// login
 	login, err := sw.Login (ctx, cfg.Username, cfg.Password, cfg.ApiKey)
 	if err != nil { t.Fatal (err) }
 
@@ -37,7 +37,7 @@ func TestFirstLogin2 (t *testing.T) {
 	ctx, cancel := context.WithTimeout (context.Background(), time.Minute) // this should take < 1 minute
 	defer cancel()
 
-	// get our list of jobs, only unscheduled ones
+	// login
 	_, err := sw.Login (ctx, cfg.Username, "asdf", cfg.ApiKey)
 	if err == nil { t.Fatal ("expecting an error") }
 
@@ -52,7 +52,7 @@ func TestFirstLogin2b (t *testing.T) {
 	ctx, cancel := context.WithTimeout (context.Background(), time.Minute) // this should take < 1 minute
 	defer cancel()
 
-	// get our list of jobs, only unscheduled ones
+	// login
 	_, err := sw.Login (ctx, cfg.Username, cfg.Password, "asdf")
 	if err == nil { t.Fatal ("expecting an error") }
 
@@ -61,3 +61,26 @@ func TestFirstLogin2b (t *testing.T) {
 	t.Logf("%s\n", errors.Cause(err))
 }
 */
+
+
+func TestRefreshLogin1 (t *testing.T) {
+	sw, cfg := newServiceWorks (t)
+
+	ctx, cancel := context.WithTimeout (context.Background(), time.Minute) // this should take < 1 minute
+	defer cancel()
+
+	// refresh
+	login, err := sw.RefreshToken (ctx, cfg.Token)
+	if err != nil { t.Fatal (err) }
+
+	assert.Equal (t, true, len(login.Token) > 10)
+	assert.Equal (t, "373", login.CompanyId)
+	assert.Equal (t, "Atlantic Standard Time", login.TimeZoneName)
+
+	// now make sure that it's different? not sure if it changes actually
+	assert.NotEqual (t, cfg.Token, login.Token)
+
+	// store the login token in our local config for future calls
+	cfg.Token  = login.Token 
+	saveConfig (t, cfg)
+}
