@@ -63,6 +63,10 @@ func (this *apiStatus) Error () error {
 		return errors.WithStack(ErrInvalidCode)
 	}
 
+	if this.Status == 0 && strings.EqualFold(this.Message, "No Jobs Found") {
+		return nil // this is cool, just means we had no jobs from the search
+	}
+
 	if this.Status == 2 && strings.Contains(this.Message, "invalid token") {
 		return errors.WithStack(ErrInvalidCode)
 	}
