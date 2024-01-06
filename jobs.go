@@ -43,7 +43,8 @@ type Assignment struct {
 }
 
 type Job struct {
-    TicketId, TicketStatusId, Duration int 
+    TicketStatusId JobStatus
+    TicketId, Duration int 
     IssueDescription, TicketStatus string
 
     TripAssignmentId, TripNo, TimeRangeId int 
@@ -54,7 +55,8 @@ type Job struct {
 }
 
 type jobCreate struct {
-    TicketId, TicketStatusId int 
+    TicketStatusId JobStatus
+    TicketId int 
     IssueDescription, TicketStatus string 
     
     Customer Customer
