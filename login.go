@@ -9,6 +9,7 @@ import (
     "fmt"
     "net/http"
     "context"
+    "time"
 )
 
   //-----------------------------------------------------------------------------------------------------------------------//
@@ -36,6 +37,10 @@ func (this *respLogin) response () (*RespLogin, error) {
 
 type RespLogin struct {
     Token, Phone, TimeZoneName, CompanyId string
+}
+
+func (this *RespLogin) ExpiresAt () time.Time {
+    return time.Now().AddDate(0, 0, 29) // i was told this expires in 30 days... so just go with 29
 }
 
   //-----------------------------------------------------------------------------------------------------------------------//
