@@ -21,6 +21,7 @@ import (
 type JobStatus int 
 
 const (
+	JobStatus_unassigned 	JobStatus = 1
 	JobStatus_scheduled		JobStatus = 2
 	JobStatus_unscheduled 	JobStatus = 7
 	
@@ -32,7 +33,6 @@ var (
 	ErrInvalidCode 		= errors.New("Token not valid")
 	ErrInvalidUserPassword	= errors.New("Username or Password is invalid")
 	ErrAuthExpired		= errors.New("Token expired")
-	ErrTooManyRecords	= errors.New("Too many records returned")
 )
 
   //-----------------------------------------------------------------------------------------------------------------------//
