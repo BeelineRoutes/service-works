@@ -24,3 +24,17 @@ func TestSecondCustomer1 (t *testing.T) {
 	assert.Equal (t, 20144, customers[0].CustomerId)
 	
 }
+
+func TestSecondGetCustomerAddress1 (t *testing.T) {
+	sw, cfg := newServiceWorks (t)
+
+	ctx, cancel := context.WithTimeout (context.Background(), time.Minute) // this should take < 1 minute
+	defer cancel()
+
+	// get our list of jobs, only unscheduled ones
+	addr, err := sw.GetCustomerAddress (ctx, cfg.Token, 20147)
+	if err != nil { t.Fatal (err) }
+
+	assert.Equal (t, "23 Potter Pl Shelburne, VT 05482", addr)
+	
+}
