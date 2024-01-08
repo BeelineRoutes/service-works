@@ -54,6 +54,14 @@ type Job struct {
     CustomerName, CustomerAddress, ContactPhone string 
 }
 
+func (this *Job) IsUnscheduled () bool {
+    switch this.TicketStatusId {
+    case JobStatus_unassigned, JobStatus_scheduled:
+        return true 
+    }
+    return false 
+}
+
 type jobCreate struct {
     TicketStatusId JobStatus
     TicketId int 
