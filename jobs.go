@@ -56,7 +56,7 @@ type Job struct {
 
 func (this *Job) IsUnscheduled () bool {
     switch this.TicketStatusId {
-    case JobStatus_unassigned, JobStatus_scheduled:
+    case JobStatus_unassigned, JobStatus_unscheduled:
         return true 
     }
     return false 
