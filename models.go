@@ -24,7 +24,7 @@ const (
 	JobStatus_unassigned 	JobStatus = 1
 	JobStatus_scheduled		JobStatus = 2
 	JobStatus_unscheduled 	JobStatus = 7
-	
+	JobStatus_confirmed		JobStatus = 13
 )
 
 //----- ERRORS ---------------------------------------------------------------------------------------------------------//
